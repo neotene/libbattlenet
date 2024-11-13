@@ -5,5 +5,5 @@
 
 TEST(all, all)
 {
-    ASSERT_TRUE(bnetcpp::auth("mynick"));
+    ASSERT_NO_THROW(bnetcpp::auth("myid", "mysecret"));
 }

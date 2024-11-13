@@ -1,3 +1,5 @@
+#include <base64/base64.h>
+
 #include <boost/asio/connect.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/beast/core.hpp>
@@ -6,9 +8,8 @@
 #include <boost/json/src.hpp>
 #include <iostream>
 
-#include "base64.h"
+#include "bnetcpp/auth.hpp"
 #include "boost/beast/version.hpp"
-#include "config.hpp"
 
 namespace beast = boost::beast;
 namespace http = beast::http;
@@ -16,17 +17,12 @@ namespace net = boost::asio;
 namespace ssl = net::ssl;
 using tcp = net::ip::tcp;
 
-class BnetConn
-{
-   private:
-    std::string token_;
-};
-
 namespace net = boost::asio;
 namespace ssl = net::ssl;
 using tcp = net::ip::tcp;
 
-BNETCPP_API BnetConn
+namespace bnetcpp {
+BnetConn
 auth(const std::string& client_id, const std::string& client_secret)
 {
     try
@@ -66,8 +62,45 @@ auth(const std::string& client_id, const std::string& client_secret)
         std::string auth_base64 = base64_encode(auth);
         req.set(http::field::authorization, "Basic " + auth_base64);
 
+        // Envoie de la requête et réception de la réponse
+        http::write(stream, req);
+
+        beast::flat_buffer buffer;
+        http::response<http::dynamic_body> res;
+        http::read(stream, buffer, res);
+
+        // Affiche le contenu de la réponse
+        std::cout << res << std::endl;
+
+        // Extraction du token d'accès
+        std::string access_token;
+        if (res.result() == http::status::ok)
+        {
+            auto json_response = boost::json::parse(beast::buffers_to_string(res.body().data()));
+            access_token = json_response.at("access_token").as_string().c_str();
+            std::cout << "Access Token: " << access_token << std::endl;
+        } else
+        {
+            std::cerr << "Erreur d'authentification : " << res.result_int() << std::endl;
+        }
+
+        // Fermeture de la connexion
+        beast::error_code ec;
+        auto _ = stream.shutdown(ec);
+        if (ec == net::error::eof)
+        {
+            ec = {};
+        }
+        if (ec)
+        {
+            throw beast::system_error{ec};
+        }
+        return BnetConn{access_token};
     } catch (const std::exception& e)
     {
         std::cerr << "Erreur : " << e.what() << std::endl;
+        throw e;
     }
 }
+
+}   // namespace bnetcpp
