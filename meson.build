@@ -1,10 +1,12 @@
 project('bnetcpp', 'cpp', version : '0.1',
-  default_options : ['cpp_std=c++26'])
+  default_options : ['cpp_std=c++20'])
 
 tests = dependency('gtest')
 tests_main = dependency('gtest_main')
 
 network = dependency('boost')
+
+openssl = dependency('openssl')
 
 bnetcpp_deps = [network]
 
@@ -20,6 +22,10 @@ type = get_option('default_library')
 
 bnetcpp_cpp_args = []
 cpp_args = []
+
+if host_machine.system() == 'windows'
+    cpp_args += ['-D_WIN32_WINNT=_WIN32_WINNT_WIN10', '-D_WINSOCK_DEPRECATED_NO_WARNINGS']
+endif
 
 if type == 'static'
     cpp_args += ['-DBNETCPP_STATIC']
