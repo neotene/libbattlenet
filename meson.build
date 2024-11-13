@@ -8,7 +8,9 @@ network = dependency('boost')
 
 openssl = dependency('openssl')
 
-bnetcpp_deps = [network]
+cppbase64 = dependency('cppbase64')
+
+bnetcpp_deps = [network, openssl, cppbase64]
 
 if host_machine.system() == 'linux'
   bnetcpp_deps += dependency('threads')
