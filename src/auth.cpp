@@ -5,8 +5,10 @@
 #include <boost/beast/ssl.hpp>
 #include <boost/json/src.hpp>
 #include <iostream>
-#include <boost/beast
+
+#include "base64.h"
 #include "boost/beast/version.hpp"
+#include "config.hpp"
 
 namespace beast = boost::beast;
 namespace http = beast::http;
@@ -14,15 +16,21 @@ namespace net = boost::asio;
 namespace ssl = net::ssl;
 using tcp = net::ip::tcp;
 
-int
-main()
+class BnetConn
+{
+   private:
+    std::string token_;
+};
+
+namespace net = boost::asio;
+namespace ssl = net::ssl;
+using tcp = net::ip::tcp;
+
+BNETCPP_API BnetConn
+auth(const std::string& client_id, const std::string& client_secret)
 {
     try
     {
-        // Variables pour le client_id et le client_secret
-        const std::string client_id = "VOTRE_CLIENT_ID";
-        const std::string client_secret = "VOTRE_CLIENT_SECRET";
-
         // Créez le contexte SSL et le socket
         net::io_context ioc;
         ssl::context ctx(ssl::context::tlsv12_client);
@@ -55,6 +63,7 @@ main()
         // Authentification en utilisant client_id et client_secret
         std::string auth = client_id + ":" + client_secret;
         // std::string auth_base64 = beast::detail::base64_encode(auth);
+        std::string auth_base64 = base64_encode(auth);
         req.set(http::field::authorization, "Basic " + auth_base64);
 
     } catch (const std::exception& e)
