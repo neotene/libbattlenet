@@ -22,14 +22,15 @@ AlignConsecutiveMacros: Consecutive
 UseCRLF: false
 BreakConstructorInitializers: BeforeComma
 # Should be declared this way:
-BreakBeforeBraces: Custom
-BraceWrapping:
-    AfterClass: true
-    AfterControlStatement: true
-    AfterEnum: true
-    AfterFunction: true
-    AfterNamespace: false
-    SplitEmptyFunction: false
+BreakBeforeBraces: Attach
+# BraceWrapping:
+#     AfterClass: true
+#     AfterControlStatement: true
+#     AfterEnum: true
+#     AfterFunction: true
+#     AfterNamespace: false
+#     BeforeCatch: false
+#     SplitEmptyFunction: false
 IndentPPDirectives: AfterHash
 PPIndentWidth: 1
 AlwaysBreakTemplateDeclarations: Yes
