@@ -6,17 +6,16 @@
 
 namespace bnetcpp {
 
-class bnet_conn
-{
+class connection {
    private:
     std::string token_;
 
    public:
-    bnet_conn(std::string const& token)
-        : token_(token)
-    {}
+    connection(std::string const& token)
+        : token_(token) {
+    }
 };
 
-extern BNETCPP_API bnet_conn auth(const std::string& client_id, const std::string& client_secret);
+extern BNETCPP_API connection auth(const std::string& client_id, const std::string& client_secret);
 
 }   // namespace bnetcpp

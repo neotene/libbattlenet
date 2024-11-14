@@ -22,7 +22,7 @@ namespace ssl = net::ssl;
 using tcp = net::ip::tcp;
 
 namespace bnetcpp {
-bnet_conn
+connection
 auth(const std::string &client_id, const std::string &client_secret) {
     net::io_context ioc;
     ssl::context ctx(ssl::context::tlsv12_client);
@@ -109,7 +109,7 @@ auth(const std::string &client_id, const std::string &client_secret) {
         throw error::json_invalid_error(e);
     }
 
-    return bnet_conn{access_token};
+    return connection{access_token};
 }
 
 }   // namespace bnetcpp

@@ -54,7 +54,7 @@ bnetcpp_dep = declare_dependency(
 test('test_all',
   executable('test_all',
     ['test_all.cpp'],
-    dependencies: [bnetcpp_dep, tests, tests_main],
+    dependencies: [network, openssl, bnetcpp_dep, tests, tests_main],
     cpp_args: tests_cpp_args + cpp_args,
   ),
   args : ['--gtest_color=yes'])
