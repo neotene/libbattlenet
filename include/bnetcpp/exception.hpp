@@ -1,6 +1,5 @@
 #pragma once
 
-#include <boost/exception/exception.hpp>
 #include <boost/system.hpp>
 #include <exception>
 #include <format>
