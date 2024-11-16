@@ -6,6 +6,8 @@
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/ssl.hpp>
+#include <cstdio>
+#include <future>
 #include <iostream>
 
 #include "bnetcpp/exception.hpp"
@@ -85,8 +87,8 @@ run_stub() {
         ctx.set_options(ssl::context::default_workarounds | ssl::context::no_sslv2 | ssl::context::single_dh_use);
 
         // Chemins vers le certificat et la clé
-        ctx.use_certificate_chain_file("server.crt");
-        ctx.use_private_key_file("server.key", ssl::context::pem);
+        ctx.use_certificate_chain_file("../../server.crt");
+        ctx.use_private_key_file("../../server.key", ssl::context::pem);
 
         // Initialisation de Boost.Asio
         net::io_context ioc;
@@ -112,7 +114,11 @@ run_stub() {
 }
 
 TEST(all, all) {
-    ASSERT_THROW(bnetcpp::auth("myid", "mysecret"), bnetcpp::error::not_ok_error);
+    ASSERT_THROW(bnetcpp::auth("myid", "mysecret", {"none", 443}), bnetcpp::error::not_ok_error);
 
-    bnetcpp::connection conn{bnetcpp::auth("myid", "mysecret")};
+    auto hdl = std::async(run_stub);
+
+    ASSERT_NO_THROW(bnetcpp::auth("myid", "mysecret", {"localhost", 8443}));
+
+    hdl.get();
 }

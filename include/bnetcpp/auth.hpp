@@ -1,5 +1,7 @@
 #pragma once
 
+#include <winsock2.h>
+
 #include <string>
 
 #include "config.hpp"
@@ -16,6 +18,14 @@ class connection {
     }
 };
 
-extern BNETCPP_API connection auth(const std::string& client_id, const std::string& client_secret);
+struct host {
+    std::string hostname;
+    unsigned short port;
+};
+
+const host bnet_europe = {"eu.battle.net", 443};
+
+extern BNETCPP_API connection auth(const std::string& client_id, const std::string& client_secret,
+                                   host const& host = bnet_europe);
 
 }   // namespace bnetcpp

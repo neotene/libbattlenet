@@ -6,6 +6,7 @@
 #include <boost/beast/http.hpp>
 #include <boost/beast/ssl.hpp>
 #include <boost/json/src.hpp>
+#include <string>
 
 #include "bnetcpp/auth.hpp"
 #include "bnetcpp/exception.hpp"
@@ -23,7 +24,7 @@ using tcp = net::ip::tcp;
 
 namespace bnetcpp {
 connection
-auth(const std::string &client_id, const std::string &client_secret) {
+auth(const std::string &client_id, const std::string &client_secret, host const &host) {
     net::io_context ioc;
     ssl::context ctx(ssl::context::tlsv12_client);
 
@@ -41,12 +42,12 @@ auth(const std::string &client_id, const std::string &client_secret) {
         auto _ = stream.shutdown(ec);
     });
 
-    if (!SSL_set_tlsext_host_name(stream.native_handle(), "us.battle.net")) {
+    if (!SSL_set_tlsext_host_name(stream.native_handle(), host.hostname.data())) {
         throw error::ssl_set_tlsext_host_name_error();
     }
 
     try {
-        auto const results = resolver.resolve("us.battle.net", "https");
+        auto const results = resolver.resolve(host.hostname, std::to_string(host.port));
         try {
             beast::get_lowest_layer(stream).connect(results);
         } catch (boost::system::system_error const &e) {
@@ -64,7 +65,7 @@ auth(const std::string &client_id, const std::string &client_secret) {
     }
 
     http::request<http::string_body> req{http::verb::post, "/oauth/token", 11};
-    req.set(http::field::host, "us.battle.net");
+    req.set(http::field::host, host.hostname);
     req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
     req.set(http::field::content_type, "application/x-www-form-urlencoded");
 
