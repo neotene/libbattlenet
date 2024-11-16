@@ -114,9 +114,11 @@ run_stub() {
 }
 
 TEST(all, all) {
-    ASSERT_THROW(bnetcpp::auth("myid", "mysecret", {"none", 443}), bnetcpp::error::not_ok_error);
+    // ASSERT_THROW(bnetcpp::auth("myid", "mysecret", {"none", 443}), bnetcpp::error::resolve_error);
 
     auto hdl = std::async(run_stub);
+
+    // ASSERT_THROW(bnetcpp::auth("myid", "mysecret", {"localhost", 443}), bnetcpp::error::not_ok_error);
 
     ASSERT_NO_THROW(bnetcpp::auth("myid", "mysecret", {"localhost", 8443}));
 

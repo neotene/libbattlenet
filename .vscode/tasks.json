@@ -6,7 +6,14 @@
         {
             "label": "meson",
             "type": "shell",
-            "command": "meson compile -C build"
+            "command": "meson compile -C build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
         }
     ]
 }
