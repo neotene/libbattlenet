@@ -42,7 +42,7 @@ auth(const std::string &client_id, const std::string &client_secret, host const 
         auto _ = stream.shutdown(ec);
     });
 
-    if (!SSL_set_tlsext_host_name(stream.native_handle(), host.hostname.data())) {
+    if (!SSL_set_tlsext_host_name(stream.native_handle(), host.hostname)) {
         throw error::ssl_set_tlsext_host_name_error();
     }
 

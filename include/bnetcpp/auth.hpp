@@ -19,8 +19,8 @@ class connection {
 };
 
 struct host {
-    std::string hostname;
-    unsigned short port;
+    char const* const hostname;
+    unsigned short const port;
 };
 
 const host bnet_europe = {"eu.battle.net", 443};
