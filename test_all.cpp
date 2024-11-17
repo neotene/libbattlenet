@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <future>
 #include <iostream>
+#include <print>
 
 #include "bnetcpp/exception.hpp"
 
@@ -38,30 +39,31 @@ handle_request(const http::request<http::string_body>& req, http::response<http:
     }
 }
 
+// void on_read(
 void
 do_session(tcp::socket socket, ssl::context& ctx) {
     auto stream = std::make_shared<beast::ssl_stream<beast::tcp_stream>>(std::move(socket), ctx);
 
     // Effectuer la poignée de main SSL
     stream->async_handshake(ssl::stream_base::server, [stream](beast::error_code ec) {
-        if (!ec) {
-            // Lire la requête HTTP
-            auto buffer = std::make_shared<beast::flat_buffer>();
-            auto req = std::make_shared<http::request<http::string_body>>();
-            http::async_read(*stream, *buffer, *req, [stream, buffer, req](beast::error_code ec, std::size_t) {
-                if (!ec) {
-                    // Créer et envoyer la réponse HTTP
-                    auto res = std::make_shared<http::response<http::string_body>>();
-                    handle_request(*req, *res);
-                    http::async_write(*stream, *res, [stream, res](beast::error_code ec, std::size_t) {
-                        if (ec) {
-                            std::cerr << "Erreur lors de l'envoi de la réponse: " << ec.message() << std::endl;
-                        }
-                        auto _ = stream->shutdown(ec);
-                    });
-                }
-            });
+        if (ec) {
+            std::print(stderr, "HANDSHAKE ERROR: {}", ec.message());
         }
+
+        auto buffer = std::make_shared<beast::flat_buffer>();
+        auto req = std::make_shared<http::request<http::string_body>>();
+        http::async_read(*stream, *buffer, *req, [stream, buffer, req](beast::error_code ec, std::size_t) {
+            if (!ec) {
+                auto res = std::make_shared<http::response<http::string_body>>();
+                handle_request(*req, *res);
+                http::async_write(*stream, *res, [stream, res](beast::error_code ec, std::size_t) {
+                    if (ec) {
+                        std::cerr << "Erreur lors de l'envoi de la réponse: " << ec.message() << std::endl;
+                    }
+                    auto _ = stream->shutdown(ec);
+                });
+            }
+        });
     });
 }
 
@@ -73,7 +75,7 @@ do_accept(tcp::acceptor& acceptor, ssl::context& ctx) {
             do_session(std::move(socket), ctx);
         }
         // Récursivité pour accepter les connexions suivantes
-        do_accept(acceptor, ctx);
+        // do_accept(acceptor, ctx);
     });
 }
 
