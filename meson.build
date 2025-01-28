@@ -1,5 +1,5 @@
 project('bnetcpp', 'cpp', version : '0.1',
-  default_options : ['cpp_std=c++26'])
+  default_options : ['cpp_std=c++17'])
 
 tests = dependency('gtest')
 tests_main = dependency('gtest_main')
