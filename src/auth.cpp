@@ -9,5 +9,4 @@ auth(std::string const &creds)
 {
     return true;
 }
-
 }   // namespace bnetcpp
