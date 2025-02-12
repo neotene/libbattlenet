@@ -7,8 +7,11 @@ namespace bnetcpp {
 class client
 {
    private:
-    struct impl;
-    std::unique_ptr<impl> impl_;
+    struct pimpl;
+    std::unique_ptr<pimpl> impl_;
+
+   public:
+    client();
 };
 
 }   // namespace bnetcpp
