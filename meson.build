@@ -14,6 +14,7 @@ endif
 
 bnetcpp_src = [
   'src/auth.cpp',
+  'src/client.cpp'
 ]
 
 type = get_option('default_library')
@@ -29,7 +30,7 @@ endif
 
 tests_cpp_args = []
 
-bnetcpp_incs = include_directories(['include'])
+bnetcpp_incs = include_directories(['include/bnetcpp'])
 
 bnetcpp = library('bnetcpp',
   bnetcpp_src,
@@ -48,5 +49,6 @@ test('test_all',
     ['test_all.cpp'],
     dependencies: [bnetcpp_dep, tests, tests_main],
     cpp_args: tests_cpp_args + cpp_args,
+    include_directories: include_directories(['include'])
   ),
   args : ['--gtest_color=yes'])
