@@ -1,5 +1,5 @@
 project('bnetcpp', 'cpp', version : '0.1',
-  default_options : ['cpp_std=c++17'])
+  default_options : ['cpp_std=vc++latest'])
 
 tests = dependency('gtest')
 tests_main = dependency('gtest_main')
@@ -13,7 +13,6 @@ if host_machine.system() == 'linux'
 endif
 
 bnetcpp_src = [
-  'src/auth.cpp',
   'src/client.cpp'
 ]
 

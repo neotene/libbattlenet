@@ -1,17 +1,32 @@
 #pragma once
 
-#include <memory>
+#include <expected>
+#include <map>
+#include <string>
+
+#include "config.hpp"
 
 namespace bnetcpp {
 
-class client
+class BNETCPP_API client
 {
    private:
-    struct pimpl;
-    std::unique_ptr<pimpl> impl_;
+    void* impl_;
 
    public:
-    client();
+    client(void* impl);
 };
+
+enum class REGION
+{
+    EU,
+    US,
+    APAC,
+    CN
+};
+
+extern std::map<REGION, std::string> region_oauth_uris;
+
+extern BNETCPP_API client authenticate(REGION&& region, std::string&& id, std::string&& secret);
 
 }   // namespace bnetcpp

@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "bnetcpp/auth.hpp"
+#include "bnetcpp/client.hpp"
 
 TEST(all, all)
 {
-    ASSERT_TRUE(bnetcpp::authenticate(bnetcpp::REGION::EU, "myid", "mysecret"));
+    ASSERT_NO_THROW(bnetcpp::authenticate(bnetcpp::REGION::EU, "myid", "mysecret"));
 }
