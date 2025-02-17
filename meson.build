@@ -46,7 +46,7 @@ bnetcpp_dep = declare_dependency(
 test('test_all',
   executable('test_all',
     ['test_all.cpp'],
-    dependencies: [bnetcpp_dep, tests, tests_main],
+    dependencies: [bnetcpp_dep, tests, network],
     cpp_args: tests_cpp_args + cpp_args,
     include_directories: include_directories(['include'])
   ),
