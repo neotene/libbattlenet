@@ -1,12 +1,12 @@
+#include "client.hpp"
+
 #include <boost/asio.hpp>
 #include <boost/beast.hpp>
-#include <expected>
 #include <iostream>
 #include <map>
 #include <stdexcept>
 
 #include "boost/asio/io_context.hpp"
-#include "client.hpp"
 
 namespace beast = boost::beast;   // from <boost/beast.hpp>
 namespace http = beast::http;     // from <boost/beast/http.hpp>
